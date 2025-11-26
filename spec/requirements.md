@@ -19,10 +19,10 @@ Build an AWS customer support agent that serves as an alternative to traditional
 
 ## Approach
 
-* Integrate all necessary information in GitHub wiki at `https://github.com/aws-samples/sample-one-click-generative-ai-solutions`
-* Build an AI agent that answers customer questions by referencing multiple wiki files (markdown files, PDFs, YouTube videos, etc.)
+* Integrate all necessary information in repository documentation at `https://github.com/icoxfog417/personal-account-manager`
+* Build an AI agent that answers customer questions by referencing documentation files (markdown files, PDFs, YouTube videos, etc.)
 * Enable customers to interact with the agent and delegate trustworthy operations (setting billing alerts, applying credits, etc.)
-* Store customer-specific issues alongside GitHub wiki content to enable personalization
+* Store customer-specific issues alongside documentation content to enable personalization
 
 ## Implementation
 
@@ -40,7 +40,7 @@ Build an AWS customer support agent that serves as an alternative to traditional
 * **Phase 2**: Send message via email
 
 ### 2. Knowledge Source Integration
-* Execute `git clone https://github.com/aws-samples/sample-one-click-generative-ai-solutions.wiki.git`
+* Clone repository containing documentation files
 * **Phase 2**: Integrate customer's original knowledge sources (Google Drive, etc.) by leveraging AgentCore Identity
 
 ### 3. Answer Questions

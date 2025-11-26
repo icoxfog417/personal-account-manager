@@ -10,7 +10,7 @@ This document outlines the architecture for an AWS customer support agent that s
 2. **Leverage AgentCore Services**: Utilize AgentCore Runtime, Memory, and Identity for infrastructure
 3. **Separation of Concerns**: Clear boundaries between agent logic, knowledge sources, and infrastructure
 4. **Minimal Complexity**: Simple, cost-effective AWS architecture
-5. **Phased Implementation**: Focus on Phase 1 (chat UI, wiki integration, basic Q&A)
+5. **Phased Implementation**: Focus on Phase 1 (basic Q&A with repository documents)
 
 ---
 
@@ -74,7 +74,7 @@ classDiagram
 
 **WikiKnowledgeSource**
 - **File I/O operations only** - no search logic
-- Clones/updates GitHub wiki repository using GitPython
+- Clones/updates repository using GitPython
 - Loads file contents by path
 - Lists available files
 - Simple data access layer
@@ -116,7 +116,7 @@ graph TB
     end
     
     subgraph "Knowledge Sources"
-        Wiki[GitHub Wiki<br/>Markdown Files]
+        Repo[Repository Documents<br/>Markdown Files]
         Future[Future: Google Drive<br/>Customer Docs]
     end
     
@@ -124,7 +124,7 @@ graph TB
     Runtime --> Agent
     Agent -->|Store/Retrieve| Memory
     Agent -->|LLM Calls| Bedrock
-    Agent -->|Read Files| Wiki
+    Agent -->|Read Files| Repo
     Runtime -->|Traces| CloudWatch
     Runtime -->|Pull Image| ECR
     Agent -.->|Phase 2| Identity
@@ -164,9 +164,9 @@ graph TB
 - Transaction Search for GenAI observability
 - Log aggregation for debugging
 
-**GitHub Wiki**
-- Source: `https://github.com/aws-samples/sample-one-click-generative-ai-solutions.wiki.git`
-- Access: GitPython clone (no authentication needed for public wiki)
+**Repository Documents**
+- Source: `https://github.com/icoxfog417/personal-account-manager`
+- Access: GitPython clone (no authentication needed for public repository)
 - Update: Periodic pull or on-demand
 
 ### 2.3 Cost Optimization
@@ -322,7 +322,7 @@ Based on reference templates (GenU, AIAgentDev), the deployment stack includes:
 ### 6.1 In Scope
 
 ✅ Agent implementation (no chat UI in this repository)
-✅ GitHub wiki integration (clone + file search)
+✅ Repository document integration (clone + file search)
 ✅ Conversation memory (STM + LTM via AgentCore)
 ✅ Basic Q&A with context retrieval
 ✅ Strands Agent with `@tool` decorator
@@ -358,10 +358,10 @@ Based on reference templates (GenU, AIAgentDev), the deployment stack includes:
 - **Semantic search**: Built-in vector search capabilities
 - **Scalable**: Handles multiple users/sessions
 
-### 7.3 Why File-Based Wiki Search (Phase 1)?
+### 7.3 Why File-Based Document Search (Phase 1)?
 
 - **Simplicity**: No vector DB setup/cost
-- **Sufficient for MVP**: Wiki is small, keyword search works
+- **Sufficient for MVP**: Documentation is small, keyword search works
 - **Fast iteration**: Focus on agent logic, not infrastructure
 - **Upgrade path**: Can add vector search in Phase 2
 
@@ -379,7 +379,7 @@ Based on reference templates (GenU, AIAgentDev), the deployment stack includes:
 
 - Response latency: < 3 seconds (p95)
 - Memory retrieval accuracy: > 80% relevant facts
-- Wiki search relevance: > 70% helpful results
+- Document search relevance: > 70% helpful results
 - System uptime: > 99.5%
 
 ### 8.2 Business Metrics
@@ -426,7 +426,7 @@ Based on reference templates (GenU, AIAgentDev), the deployment stack includes:
 
 | Risk | Impact | Mitigation |
 |------|--------|------------|
-| Wiki content quality | High | Curate wiki, add validation |
+| Document content quality | High | Curate documentation, add validation |
 | LLM hallucinations | High | Prompt engineering, fact-checking |
 | Memory extraction accuracy | Medium | Tune strategies, monitor quality |
 | Cost overruns | Medium | Set budgets, monitor usage |
