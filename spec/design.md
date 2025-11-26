@@ -189,16 +189,21 @@ personal-account-manager/
 │
 ├── agent/
 │   ├── __init__.py
+│   ├── __main__.py           # AgentCore entrypoint
 │   ├── support_agent.py      # SupportAgent class (Strands Agent)
-│   ├── prompts.py            # Prompt and model settings for agent
+│   ├── prompts.py            # Prompt and model settings
 │   ├── tools.py              # Tool definitions (@tool decorator)
+│   ├── requirements.txt      # Agent dependencies
+│   ├── Dockerfile            # Container configuration
 │   └── knowledge/
 │       ├── __init__.py
 │       └── wiki_source.py    # WikiKnowledgeSource class
 │
-├── deployment/
-│   ├── deployment-stack.yaml # One-click CloudFormation deployment
-│   └── deploy.sh             # Deployment automation
+├── cdk/
+│   ├── app.py                # CDK app entry point
+│   ├── support_agent_stack.py # Stack definition
+│   ├── cdk.json              # CDK configuration
+│   └── requirements.txt      # CDK dependencies
 │
 ├── tests/
 │   ├── unit/
@@ -215,16 +220,22 @@ personal-account-manager/
 **agent/support_agent.py**
 - SupportAgent class (Strands Agent)
 - Implements search/retrieve logic for all knowledge sources
-- Defines tools using `@tool` decorator
+
+**agent/tools.py**
+- Tool definitions using `@tool` decorator
+- Search and retrieval functions
 
 **agent/knowledge/wiki_source.py**
 - WikiKnowledgeSource class
 - Provides file I/O operations only (clone, load, list)
 
-**infrastructure/deployment-stack.yaml**
-- One-click CloudFormation deployment
-- Provisions AgentCore Runtime, Memory, and supporting resources
-- Includes LaunchStack button integration
+**agent/__main__.py**
+- AgentCore entrypoint with `@app.entrypoint` decorator
+- Integrates SupportAgent with BedrockAgentCoreApp
+
+**cdk/support_agent_stack.py**
+- CDK stack for deploying agent to AgentCore Runtime
+- Docker image asset and runtime configuration
 
 ---
 
@@ -264,56 +275,274 @@ sequenceDiagram
 
 ## 5. Deployment Strategy
 
-### 5.1 One-Click Deployment with CloudFormation
+### 5.1 Simplified CDK Deployment Architecture
 
-**LaunchStack Button**
-- Users click LaunchStack button in README
-- CloudFormation template provisions all resources
-- CodeBuild project clones repository and deploys agent
-- SNS notifications sent to user email on completion
+**Deployment Approach**
+- Use AWS CDK (Python) for infrastructure as code
+- Leverage CDK Docker image assets for automatic build and push
+- Auto-created IAM roles via AgentCore
+- Single command deployment: `cdk deploy`
 
-**CloudFormation Resources**
-- AgentCore Runtime (container orchestration)
-- AgentCore Memory (with LTM strategies)
-- ECR Repository (container images)
-- IAM Roles (execution permissions)
-- CodeBuild Project (build and deployment)
-- SNS Topic (deployment notifications)
-- CloudWatch Log Groups (observability)
+**Key Simplifications**
+- No custom Lambda trigger needed - CDK handles Docker build automatically
+- No custom IAM role construct - AgentCore auto-creates roles
+- Minimal infrastructure code - focus on agent deployment
 
-**Deployment Flow**
-1. User clicks LaunchStack button
-2. CloudFormation creates CodeBuild project
-3. CodeBuild clones this repository
-4. CodeBuild builds Docker image
-5. CodeBuild pushes image to ECR
-6. CodeBuild deploys to AgentCore Runtime
-7. CodeBuild clones wiki repository
-8. SNS sends completion notification with endpoint URL
+**CDK Stack Components**
 
-### 5.2 CloudFormation Template Structure
+```mermaid
+graph TB
+    subgraph "CDK Stack"
+        Stack[SupportAgentStack]
+        
+        subgraph "Container Management"
+            DockerAsset[Docker Image Asset]
+            ECR[ECR Repository]
+        end
+        
+        subgraph "AgentCore Resources"
+            Runtime[AgentCore Runtime]
+        end
+        
+        subgraph "Observability"
+            Logs[CloudWatch Logs]
+            XRay[X-Ray Tracing]
+        end
+    end
+    
+    Stack --> DockerAsset
+    DockerAsset --> ECR
+    Stack --> Runtime
+    ECR --> Runtime
+    Runtime --> Logs
+    Runtime --> XRay
+```
 
-Based on reference templates (GenU, AIAgentDev), the deployment stack includes:
+### 5.2 Simplified CDK Stack Structure
 
-**Parameters**
-- NotificationEmailAddress: Email for deployment notifications
-- Environment: dev/staging/prod
-- ModelRegion: Bedrock model region
-- WikiRepoUrl: GitHub wiki repository URL
+**Directory Layout**
+```
+cdk/
+├── app.py                          # CDK app entry point
+├── support_agent_stack.py          # Main stack definition
+├── cdk.json                        # CDK configuration
+└── requirements.txt                # CDK dependencies (aws-cdk-lib only)
+```
 
-**Resources**
-- DeploymentNotificationTopic: SNS topic for notifications
-- CodeBuildServiceRole: IAM role with necessary permissions
-- DeploymentProject: CodeBuild project for agent deployment
-- DeploymentTrigger: Lambda custom resource to start build
-- TriggerFunction: Lambda to invoke CodeBuild
+**Stack Resources**
 
-**BuildSpec in CodeBuild**
-- Install dependencies (Python, Node.js, AgentCore CLI)
-- Clone wiki repository
-- Build Docker image
-- Deploy to AgentCore using `agentcore launch`
-- Send completion notification via SNS
+1. **Docker Image Asset**
+   - CDK automatically builds Docker image from `../agent` directory
+   - Pushes to auto-created ECR repository
+   - Handles ARM64 architecture
+   - No CodeBuild or Lambda needed
+
+2. **AgentCore Runtime**
+   - References Docker image asset URI
+   - Network mode: PUBLIC (configurable)
+   - Protocol: HTTP
+   - Auto-creates execution role with required permissions
+   - Environment variables for AWS region
+
+**Stack Parameters**
+- `AgentName`: Name for the agent runtime (default: "SupportAgent")
+- `NetworkMode`: PUBLIC or PRIVATE (default: "PUBLIC")
+
+**Stack Outputs**
+- `AgentRuntimeId`: Runtime resource ID
+- `AgentRuntimeArn`: Runtime ARN for invocation
+- `ImageUri`: Docker image URI in ECR
+
+### 5.3 Simplified Deployment Flow
+
+```mermaid
+sequenceDiagram
+    participant Dev as Developer
+    participant CDK as CDK CLI
+    participant Docker as Docker Build
+    participant ECR
+    participant CFN as CloudFormation
+    participant AgentCore as AgentCore Runtime
+    
+    Dev->>CDK: cdk deploy
+    CDK->>Docker: Build image from agent/
+    Docker->>ECR: Push image (auto-created repo)
+    CDK->>CFN: Create stack
+    CFN->>AgentCore: Create runtime (auto-create role)
+    AgentCore->>ECR: Pull image
+    AgentCore-->>CFN: Runtime ready
+    CFN-->>CDK: Stack complete
+    CDK-->>Dev: Outputs (ARN, URI)
+```
+
+**Deployment Steps**
+1. Developer runs `cdk deploy`
+2. CDK builds Docker image locally (or in cloud if configured)
+3. CDK pushes image to auto-created ECR repository
+4. CloudFormation creates AgentCore Runtime
+5. AgentCore auto-creates execution role with required permissions
+6. Runtime pulls image from ECR
+7. Stack outputs runtime ARN
+
+**Deployment Time**: 5-8 minutes
+- Docker build and push: ~3-5 minutes
+- Runtime provisioning: ~2-3 minutes
+
+### 5.4 Docker Container Configuration
+
+**Dockerfile Location**: `agent/Dockerfile`
+
+```dockerfile
+FROM public.ecr.aws/docker/library/python:3.11-slim
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir aws-opentelemetry-distro==0.10.1
+
+# Environment variables
+ENV AWS_REGION=us-west-2
+ENV AWS_DEFAULT_REGION=us-west-2
+
+# Non-root user for security
+RUN useradd -m -u 1000 bedrock_agentcore
+USER bedrock_agentcore
+
+# Expose ports
+EXPOSE 8080 8000
+
+# Copy agent code
+COPY . .
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8080/ping || exit 1
+
+# Start with OpenTelemetry instrumentation
+CMD ["opentelemetry-instrument", "python", "-m", "agent"]
+```
+
+**Key Features**
+- Python 3.11 slim base image
+- OpenTelemetry auto-instrumentation
+- Non-root user for security
+- Health check endpoint
+- Ports 8080 (HTTP) and 8000 (metrics)
+
+### 5.5 Agent Entrypoint Integration
+
+**agent/__main__.py** (already exists)
+```python
+from bedrock_agentcore import BedrockAgentCoreApp
+from agent.support_agent import SupportAgent
+
+app = BedrockAgentCoreApp()
+
+@app.entrypoint
+async def entrypoint(payload):
+    agent = SupportAgent(
+        repo_url="https://github.com/icoxfog417/personal-account-manager",
+        knowledge_dir="docs",
+        local_path="./repo_data"
+    )
+    
+    message = payload.get("prompt", "")
+    async for msg in agent.stream_async(message):
+        if "event" in msg:
+            yield msg
+
+if __name__ == "__main__":
+    app.run()
+```
+
+**Integration Points**
+- `BedrockAgentCoreApp`: AgentCore runtime integration
+- `@app.entrypoint`: Decorator for runtime invocation
+- Streaming responses via async generator
+- Payload format: `{"prompt": "user message"}`
+
+### 5.6 CDK Deployment Commands
+
+**Initial Setup**
+```bash
+cd cdk
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+**Bootstrap (First Time)**
+```bash
+cdk bootstrap aws://ACCOUNT-ID/REGION
+```
+
+**Deploy**
+```bash
+cdk deploy
+```
+
+**View Outputs**
+```bash
+cdk deploy --outputs-file outputs.json
+```
+
+**Destroy**
+```bash
+cdk destroy
+```
+
+**Synthesize Template**
+```bash
+cdk synth > template.yaml
+```
+
+### 5.7 Testing Deployed Agent
+
+**Using AWS CLI**
+```bash
+# Get runtime ARN from outputs
+RUNTIME_ARN=$(aws cloudformation describe-stacks \
+  --stack-name SupportAgentStack \
+  --query 'Stacks[0].Outputs[?OutputKey==`AgentRuntimeArn`].OutputValue' \
+  --output text)
+
+# Invoke agent
+aws bedrock-agentcore invoke-agent-runtime \
+  --agent-runtime-arn $RUNTIME_ARN \
+  --qualifier DEFAULT \
+  --payload $(echo '{"prompt": "What is AWS Lambda?"}' | base64) \
+  response.json
+
+# View response
+cat response.json
+```
+
+**Using AWS Console**
+1. Navigate to Bedrock AgentCore Console
+2. Go to "Runtimes"
+3. Find "SupportAgentStack_SupportAgent"
+4. Click "Test"
+5. Enter payload: `{"prompt": "Your question"}`
+6. View streaming response
+
+### 5.8 IAM Permissions
+
+**Auto-Created Roles**
+- AgentCore automatically creates execution role with required permissions:
+  - ECR image pull
+  - CloudWatch Logs write
+  - X-Ray tracing
+  - Bedrock model invocation
+  - AgentCore workload identity
+
+**Developer Permissions Required**
+- `BedrockAgentCoreFullAccess` managed policy
+- `AmazonBedrockFullAccess` managed policy (or scoped Bedrock permissions)
+- IAM permissions to create roles (for auto-creation)
+- ECR repository management
+- CloudFormation stack operations
 
 ---
 
@@ -328,7 +557,7 @@ Based on reference templates (GenU, AIAgentDev), the deployment stack includes:
 ✅ Strands Agent with `@tool` decorator
 ✅ AgentCore Memory with semantic strategy
 ✅ Bedrock Converse API with prompt caching
-✅ One-click CloudFormation deployment
+✅ CDK deployment with Docker image assets
 
 ### 6.2 Out of Scope (Phase 2)
 

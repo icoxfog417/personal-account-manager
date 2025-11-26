@@ -210,4 +210,11 @@ repo_data/
 
 .DS_Store
 
+# CDK
+cdk.out/
+cdk/.venv/
+*.swp
+
+# AgentCore
+.bedrock_agentcore/
 .bedrock_agentcore.yaml
