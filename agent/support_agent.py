@@ -79,16 +79,17 @@ class SupportAgent(Agent):
 
         This method filters the agent's streaming output to only yield messages
         containing an "event" key, which is required by the Genu frontend.
+        Also passes through the final "result" message for invoke_async compatibility.
 
         Args:
             user_message: User's input message
             **kwargs: Additional arguments for the agent
 
         Yields:
-            Messages containing "event" key for frontend consumption
+            Messages containing "event" or "result" key
         """
         # Stream messages from the base Agent class
         async for message in super().stream_async(user_message, **kwargs):
-            # Only yield messages with "event" key for frontend compatibility
-            if "event" in message:
+            # Yield messages with "event" key (for frontend) or "result" key (for invoke_async)
+            if "event" in message or "result" in message:
                 yield message
