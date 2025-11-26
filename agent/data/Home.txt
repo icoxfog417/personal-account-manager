@@ -1,0 +1,4 @@
+Welcome to the sample-one-click-generative-ai-solutions wiki!
+
+AWS アカウント作成の流れ
+アカウントを作成すると、Amazon EC2 や Amazon S3 など 100 以上の AWS 製品を無料でお試しいただけます。また、AWS の世界中のリージョンで提供されるすべてのサービスを始めることができます。

@@ -3,7 +3,7 @@
 
 from strands import tool
 
-from agent.knowledge.wiki_source import WikiKnowledgeSource
+from knowledge.wiki_source import WikiKnowledgeSource
 
 
 class SupportAgentTools:
@@ -52,10 +52,10 @@ class SupportAgentTools:
                         # Check if query keywords appear in content
                         if any(keyword.strip() in content_lower for keyword in query_lower.split()):
                             # Add file with some context
-                            relevant_content.append(f"## From {file_path}\n\n{content[:1000]}...")
+                            relevant_content.append(f"## From {file_path}\n\n{content[:2000]}...")
                             
                             # Limit results to avoid overwhelming the context
-                            if len(relevant_content) >= 3:
+                            if len(relevant_content) >= 10:
                                 break
                                 
                     except Exception:

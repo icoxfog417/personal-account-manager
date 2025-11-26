@@ -4,10 +4,10 @@ from pathlib import Path
 from typing import Optional
 
 from strands import Agent
-
-from agent.knowledge.wiki_source import WikiKnowledgeSource
-from agent.prompts import SUPPORT_AGENT_SYSTEM_PROMPT, MODEL_CONFIG
-from agent.tools import SupportAgentTools
+from strands_tools import calculator, http_request
+from knowledge.wiki_source import WikiKnowledgeSource
+from prompts import SUPPORT_AGENT_SYSTEM_PROMPT, MODEL_CONFIG
+from tools import SupportAgentTools
 
 
 class SupportAgent(Agent):
@@ -49,7 +49,9 @@ class SupportAgent(Agent):
             system_prompt=system_prompt,
             tools=[
                 self.support_tools.search_wiki,
-                self.support_tools.list_wiki_files
+                self.support_tools.list_wiki_files,
+                calculator,
+                http_request
             ],
             name="AWS Support Agent",
             **kwargs
@@ -57,15 +59,34 @@ class SupportAgent(Agent):
     
     def search_knowledge(self, query: str) -> str:
         """Search knowledge sources for relevant information.
-        
+
         Centralizes search logic across all knowledge sources.
         Currently searches wiki, future: AgentCore Memory, Google Drive, etc.
-        
+
         Args:
             query: Search query
-            
+
         Returns:
             Aggregated search results
         """
         # Delegate to tools which contain the actual search logic
         return self.support_tools.search_wiki(query)
+
+    async def stream_async(self, user_message: str, **kwargs):
+        """Stream agent responses in a format compatible with Genu frontend.
+
+        This method filters the agent's streaming output to only yield messages
+        containing an "event" key, which is required by the Genu frontend.
+
+        Args:
+            user_message: User's input message
+            **kwargs: Additional arguments for the agent
+
+        Yields:
+            Messages containing "event" key for frontend consumption
+        """
+        # Stream messages from the base Agent class
+        async for message in super().stream_async(user_message, **kwargs):
+            # Only yield messages with "event" key for frontend compatibility
+            if "event" in message:
+                yield message

@@ -94,6 +94,44 @@ Follow the coding standards in `.amazonq/rules/project.md`:
 
 ## Deployment
 
+### AgentCore Deployment
+
+Deploy the agent to AWS Bedrock AgentCore Runtime:
+
+1. **Configure Agent**:
+   ```bash
+   cd agent
+   agentcore configure --entrypoint support_agent.py
+   ```
+
+2. **Deploy**:
+   ```bash
+   agentcore launch
+   ```
+   This will:
+   - Build ARM64 container in CodeBuild
+   - Push to ECR
+   - Deploy to AgentCore Runtime
+   - Configure observability
+
+3. **Test**:
+   ```bash
+   agentcore invoke '{"prompt": "Amazon Bedrockとは何ですか？"}'
+   ```
+
+4. **Monitor Logs**:
+   ```bash
+   aws logs tail /aws/bedrock-agentcore/runtimes/<agent-arn> --follow
+   ```
+
+### Important Notes
+
+- **Documentation Files**: Knowledge base files must use `.txt` extension (not `.md`) to bypass AgentCore's dockerignore filtering
+- **Data Directory**: Place documentation in `agent/data/*.txt`
+- **Memory**: AgentCore Memory is automatically configured for conversation history
+
+### CloudFormation Deployment (Alternative)
+
 The CloudFormation stack creates:
 
 - AgentCore Runtime for container orchestration

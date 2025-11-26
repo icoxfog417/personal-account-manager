@@ -1018,7 +1018,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "bedrock-agentcore-starter-toolkit", specifier = ">=0.1.26" },
+    { name = "bedrock-agentcore-starter-toolkit", specifier = ">=0.1.21" },
     { name = "gitpython", specifier = ">=3.1.45" },
     { name = "strands-agents", specifier = ">=1.13.0" },
     { name = "strands-agents-tools", specifier = ">=0.2.12" },

@@ -25,12 +25,24 @@ class WikiKnowledgeSource:
     
     def clone_or_update(self) -> None:
         """Clone repository if not exists, otherwise pull latest changes."""
-        if self.local_path.exists() and (self.local_path / ".git").exists():
-            # Repository exists, pull latest changes
+        # Skip if directory exists with markdown/txt files but no .git (bundled data)
+        if self.local_path.exists() and not (self.local_path / ".git").exists():
+            data_files = list(self.local_path.glob("*.md")) + list(self.local_path.glob("*.txt"))
+            if data_files:
+                return  # Bundled data, no need to clone
+        
+        if not self.local_path.exists():
+            # Clone if directory doesn't exist
+            self.local_path.mkdir(parents=True, exist_ok=True)
+            git.Repo.clone_from(self.repo_url, self.local_path)
+        elif (self.local_path / ".git").exists():
+            # Pull if it's a git repository
             repo = git.Repo(self.local_path)
             repo.remotes.origin.pull()
         else:
-            # Clone repository
+            # Directory exists but not a git repo - clone fresh
+            import shutil
+            shutil.rmtree(self.local_path)
             self.local_path.mkdir(parents=True, exist_ok=True)
             git.Repo.clone_from(self.repo_url, self.local_path)
     
@@ -60,6 +72,7 @@ class WikiKnowledgeSource:
             List of file paths relative to wiki root
         """
         if not self.local_path.exists():
+            print(f"DEBUG: wiki path does not exist: {self.local_path}")
             return []
             
         files = []
@@ -68,5 +81,9 @@ class WikiKnowledgeSource:
                 # Return path relative to wiki root
                 relative_path = file_path.relative_to(self.local_path)
                 files.append(relative_path)
+        
+        print(f"DEBUG: Found {len(files)} files in {self.local_path}")
+        for f in files[:10]:  # Print first 10
+            print(f"DEBUG: - {f}")
         
         return files
