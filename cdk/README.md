@@ -1,27 +1,40 @@
-# CDK Deployment for Support Agent
+# Support Agent CDK - TypeScript
 
-This directory contains AWS CDK infrastructure code to deploy the Support Agent to Amazon Bedrock AgentCore Runtime.
+TypeScript CDK deployment for AWS Customer Support Agent using AgentCore Runtime.
 
 ## Prerequisites
 
-- AWS CLI configured with appropriate credentials
-- Python 3.11+
-- Node.js (for CDK CLI)
-- Docker (for building container images)
-- CDK v2.220.0 or later
+- Node.js 18+ and npm
+- AWS CLI configured
+- AWS CDK CLI: `npm install -g aws-cdk`
+- CDK version 2.220.0 or later (for BedrockAgentCore support)
 
-## Required AWS Permissions
+## Setup
 
-Your AWS user/role needs:
-- `BedrockAgentCoreFullAccess` managed policy
-- `AmazonBedrockFullAccess` managed policy
-- IAM permissions to create roles
-- ECR repository management
-- CloudFormation stack operations
+```bash
+# Install dependencies
+npm install
+
+# Bootstrap CDK (first time only)
+cdk bootstrap
+
+# Build TypeScript
+npm run build
+```
+
+## Deployment
+
+```bash
+# Deploy the stack
+cdk deploy
+
+# Deploy with parameters
+cdk deploy --parameters AgentName=MyAgent --parameters NetworkMode=PUBLIC
+```
 
 ## Configuration
 
-Agent configuration is defined in `cdk.json` under the `agent_config` context:
+Edit `cdk.json` to configure agent settings:
 
 ```json
 {
@@ -36,61 +49,18 @@ Agent configuration is defined in `cdk.json` under the `agent_config` context:
 }
 ```
 
-**Configuration Options:**
-- `repo_url`: GitHub repository URL containing knowledge documents
-- `knowledge_dir`: Directory within repository containing knowledge files
-- `local_path`: Local path in container to store cloned repository
-- `system_prompt`: Custom system prompt (optional, uses default if empty)
+## Architecture
 
-These values are passed to the agent container as environment variables.
-
-## Setup
-
-```bash
-# Install CDK CLI globally
-npm install -g aws-cdk
-
-# Create virtual environment
-cd cdk
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-## Bootstrap (First Time Only)
-
-```bash
-cdk bootstrap aws://ACCOUNT-ID/REGION
-```
-
-## Deploy
-
-```bash
-cdk deploy
-```
-
-This will:
-1. Build the Docker image from `../agent`
-2. Push to auto-created ECR repository
-3. Create AgentCore Runtime with auto-created IAM role
-4. Output the runtime ARN for invocation
-
-## Parameters
-
-You can override default parameters:
-
-```bash
-cdk deploy --parameters AgentName=MyAgent --parameters NetworkMode=PRIVATE
-```
+- **ECR Repository**: Stores Docker image
+- **CodeBuild**: Builds ARM64 Docker image
+- **Lambda**: Triggers CodeBuild during deployment
+- **AgentCore Runtime**: Hosts the agent container
+- **IAM Roles**: Execution permissions
 
 ## Testing
 
-After deployment, test using AWS CLI:
-
 ```bash
-# Get runtime ARN from outputs
+# Get runtime ARN
 RUNTIME_ARN=$(aws cloudformation describe-stacks \
   --stack-name SupportAgentStack \
   --query 'Stacks[0].Outputs[?OutputKey==`AgentRuntimeArn`].OutputValue' \
@@ -100,11 +70,8 @@ RUNTIME_ARN=$(aws cloudformation describe-stacks \
 aws bedrock-agentcore invoke-agent-runtime \
   --agent-runtime-arn $RUNTIME_ARN \
   --qualifier DEFAULT \
-  --payload $(echo '{"prompt": "What is AWS Lambda?"}' | base64) \
+  --payload $(echo '{"prompt": "Hello"}' | base64) \
   response.json
-
-# View response
-cat response.json
 ```
 
 ## Cleanup
@@ -113,19 +80,15 @@ cat response.json
 cdk destroy
 ```
 
-## Troubleshooting
+## Development
 
-### Docker Build Issues
-- Ensure Docker daemon is running
-- Check Docker has sufficient disk space
-- Verify `../agent/Dockerfile` exists
+```bash
+# Watch mode
+npm run watch
 
-### Permission Issues
-- Verify AWS credentials are configured
-- Check IAM permissions listed above
-- Ensure CDK bootstrap was successful
+# Synthesize CloudFormation
+cdk synth
 
-### Deployment Failures
-- Check CloudFormation console for detailed error messages
-- Review CloudWatch logs for runtime issues
-- Verify Bedrock model access is enabled in your region
+# Compare changes
+cdk diff
+```

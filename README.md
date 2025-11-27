@@ -162,6 +162,17 @@ Follow the coding standards in `.kiro/steering/`:
 - **Auto-scaling**: Resources scale with demand
 - **Managed services**: Minimal infrastructure overhead
 
+## GenU Integration
+
+This agent is designed to integrate with [GenU](https://github.com/aws-samples/generative-ai-use-cases) through the [one-click deployment process](https://github.com/aws-samples/sample-one-click-generative-ai-solutions).
+
+The CDK stack is automatically tagged with `Integration:GenU`, which enables:
+- **Automatic Discovery**: The one-click deployment process discovers this stack by the tag
+- **Agent Registration**: The deployed agent is automatically registered as an available agent in GenU
+- **Seamless Integration**: No manual configuration needed for GenU integration
+
+To deploy with GenU integration, simply deploy this stack using CDK and the one-click deployment process will automatically detect and register it.
+
 ## Phase 1 Scope
 
 This implementation focuses on:

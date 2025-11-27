@@ -1,0 +1,28 @@
+{
+  "name": "support-agent-cdk",
+  "version": "1.0.0",
+  "bin": {
+    "support-agent-cdk": "bin/app.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^22.10.2",
+    "aws-cdk": "^2.220.0",
+    "eslint": "^9.39.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.0",
+    "typescript-eslint": "^8.48.0"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-bedrock-agentcore-alpha": "^2.230.0-alpha.0",
+    "aws-cdk-lib": "^2.220.0",
+    "constructs": "^10.3.0",
+    "source-map-support": "^0.5.21"
+  }
+}
