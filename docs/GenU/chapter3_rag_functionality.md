@@ -1,4 +1,4 @@
-# Genu（ジェニュー）完全ガイド - 第3章：RAG（Retrieval-Augmented Generation）チャット機能
+# Genu（ジェンユー）完全ガイド - 第3章：RAG（Retrieval-Augmented Generation）チャット機能
 
 ## 3.1 RAGチャット機能の概要
 

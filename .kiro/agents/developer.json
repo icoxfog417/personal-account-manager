@@ -2,19 +2,14 @@
   "name": "developer",
   "description": "Developer Agent",
   "mcpServers": {
-    "awslabs.core-mcp-server": {
+    "awslabs.cdk-mcp-server": {
       "command": "uvx",
-      "args": [
-        "awslabs.core-mcp-server@latest"
-      ],
+      "args": ["awslabs.cdk-mcp-server@latest"],
       "env": {
-        "AWS_PROFILE": "default",
-        "FASTMCP_LOG_LEVEL": "DEBUG",
-        "aws-foundation": "true",
-        "solutions-architect": "true"
+        "FASTMCP_LOG_LEVEL": "ERROR"
       },
-      "autoApprove": [],
-      "disabled": false
+      "disabled": false,
+      "autoApprove": []
     },
     "awslabs.aws-documentation-mcp-server": {
       "command": "uvx",

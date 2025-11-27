@@ -4,10 +4,10 @@ An AI-powered customer support agent that serves as an alternative to traditiona
 
 ## Features
 
-- **Knowledge Integration**: Searches AWS documentation from GitHub wiki
-- **Conversation Memory**: Stores customer context using AgentCore Memory
+- **Knowledge Integration**: Searches repository documentation from GitHub
+- **Conversation Memory**: Stores customer context using AgentCore Memory (STM + LTM)
 - **Serverless Deployment**: Runs on AgentCore Runtime with auto-scaling
-- **One-Click Deployment**: CloudFormation template for easy setup
+- **CDK Deployment**: Infrastructure as code with AWS CDK
 
 ## Quick Start
 
@@ -15,17 +15,29 @@ An AI-powered customer support agent that serves as an alternative to traditiona
 
 - AWS CLI configured with appropriate permissions
 - Python 3.11+ with `uv` package manager
-- Docker (for local development)
+- Docker (for container builds)
+- Node.js 18+ (for CDK)
 
-### One-Click Deployment
+### Deploy with CDK
 
-[![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=aws-support-agent&templateURL=https://raw.githubusercontent.com/aws-samples/personal-account-manager/main/infrastructure/cloudformation/deployment-stack.yaml)
+1. **Bootstrap CDK** (first time only):
+   ```bash
+   cd cdk
+   cdk bootstrap aws://ACCOUNT-ID/REGION
+   ```
 
-Or deploy via CLI:
+2. **Deploy Stack**:
+   ```bash
+   cdk deploy
+   ```
 
-```bash
-./infrastructure/scripts/deploy.sh your-email@example.com
-```
+3. **Get Runtime ARN**:
+   ```bash
+   aws cloudformation describe-stacks \
+     --stack-name SupportAgentStack \
+     --query 'Stacks[0].Outputs[?OutputKey==`AgentRuntimeArn`].OutputValue' \
+     --output text
+   ```
 
 ### Local Development
 
@@ -33,6 +45,7 @@ Or deploy via CLI:
    ```bash
    uv venv
    source .venv/bin/activate
+   cd agent
    uv pip install -r requirements.txt
    ```
 
@@ -42,119 +55,133 @@ Or deploy via CLI:
    uv run ruff check
    ```
 
-3. **Local Testing**:
-   ```bash
-   uv run python -c "
-   from src.agent.support_agent import SupportAgent
-   from src.knowledge.wiki_source import WikiKnowledgeSource
-   from src.config.settings import Settings
-   
-   wiki = WikiKnowledgeSource(Settings.WIKI_REPO_URL, Settings.WIKI_LOCAL_PATH)
-   agent = SupportAgent(Settings.MODEL_NAME, wiki, Settings.SYSTEM_PROMPT)
-   print(agent.search_wiki_files('lambda'))
-   "
-   ```
-
 ## Architecture
 
 - **SupportAgent**: Strands Agent with search/retrieve logic for all knowledge sources
-- **WikiKnowledgeSource**: File I/O operations for GitHub wiki repository
-- **AgentCore Memory**: Conversation history and customer fact extraction
+- **WikiKnowledgeSource**: File I/O operations for GitHub repository
+- **AgentCore Memory**: Conversation history (STM) and customer fact extraction (LTM)
 - **Amazon Bedrock**: Claude Sonnet 4 via Converse API with prompt caching
+- **AgentCore Runtime**: Serverless container orchestration with auto-scaling
 
 ## Project Structure
 
 ```
-├── src/
-│   ├── agent/          # Strands Agent implementation
-│   ├── knowledge/      # Knowledge source classes
-│   └── config/         # Configuration management
-├── infrastructure/     # CloudFormation and deployment scripts
+├── agent/              # Agent implementation
+│   ├── __main__.py    # AgentCore entrypoint
+│   ├── support_agent.py
+│   ├── tools.py
+│   ├── prompts.py
+│   ├── knowledge/     # Knowledge source classes
+│   └── Dockerfile
+├── cdk/               # CDK infrastructure
+│   ├── app.py
+│   └── support_agent_stack.py
 ├── tests/             # Unit and integration tests
-└── data/              # Local wiki repository
+└── spec/              # Design documentation
 ```
 
 ## Configuration
 
-Key settings in `src/config/settings.py`:
+Key environment variables:
 
-- `WIKI_REPO_URL`: GitHub wiki repository
-- `MODEL_NAME`: Bedrock model identifier
-- `MEMORY_ID`: AgentCore Memory resource ID
-- `SYSTEM_PROMPT`: Agent behavior instructions
+- `AWS_REGION`: AWS region for Bedrock and AgentCore
+- `MEMORY_ID`: AgentCore Memory resource ID (optional)
+- Repository URL and paths configured in agent code
 
 ## Development Guidelines
 
-Follow the coding standards in `.amazonq/rules/project.md`:
+Follow the coding standards in `.kiro/steering/`:
 
 - Use `uv run` for all Python operations
 - Type hints required for all functions
 - Use f-strings for string formatting
 - Test with `pytest`, format with `ruff`
+- Follow test-first interface design workflow
 
 ## Deployment
 
-### AgentCore Deployment
+### CDK Deployment
 
-Deploy the agent to AWS Bedrock AgentCore Runtime:
-
-1. **Configure Agent**:
+1. **Install Dependencies**:
    ```bash
-   cd agent
-   agentcore configure --entrypoint support_agent.py
+   cd cdk
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
    ```
 
-2. **Deploy**:
+2. **Deploy Stack**:
    ```bash
-   agentcore launch
+   cdk deploy
    ```
-   This will:
-   - Build ARM64 container in CodeBuild
-   - Push to ECR
-   - Deploy to AgentCore Runtime
-   - Configure observability
+   
+   This automatically:
+   - Builds Docker image from `agent/` directory
+   - Pushes to auto-created ECR repository
+   - Creates AgentCore Runtime with execution role
+   - Configures CloudWatch Logs and X-Ray tracing
 
-3. **Test**:
+3. **Test Deployed Agent**:
    ```bash
-   agentcore invoke '{"prompt": "Amazon Bedrockとは何ですか？"}'
+   RUNTIME_ARN=$(aws cloudformation describe-stacks \
+     --stack-name SupportAgentStack \
+     --query 'Stacks[0].Outputs[?OutputKey==`AgentRuntimeArn`].OutputValue' \
+     --output text)
+   
+   aws bedrock-agentcore invoke-agent-runtime \
+     --agent-runtime-arn $RUNTIME_ARN \
+     --qualifier DEFAULT \
+     --payload $(echo '{"prompt": "What is AWS Lambda?"}' | base64) \
+     response.json
    ```
 
-4. **Monitor Logs**:
+4. **View Logs**:
    ```bash
-   aws logs tail /aws/bedrock-agentcore/runtimes/<agent-arn> --follow
+   aws logs tail /aws/bedrock-agentcore/runtimes/$RUNTIME_ARN --follow
    ```
 
-### Important Notes
+### Deployment Time
 
-- **Documentation Files**: Knowledge base files must use `.txt` extension (not `.md`) to bypass AgentCore's dockerignore filtering
-- **Data Directory**: Place documentation in `agent/data/*.txt`
-- **Memory**: AgentCore Memory is automatically configured for conversation history
+- Docker build and push: ~3-5 minutes
+- Runtime provisioning: ~2-3 minutes
+- Total: ~5-8 minutes
 
-### CloudFormation Deployment (Alternative)
+### Required IAM Permissions
 
-The CloudFormation stack creates:
-
-- AgentCore Runtime for container orchestration
-- AgentCore Memory with semantic strategies
-- ECR repository for container images
-- CodeBuild project for automated deployment
-- SNS notifications for deployment status
+- `BedrockAgentCoreFullAccess` managed policy
+- `AmazonBedrockFullAccess` managed policy
+- IAM role creation permissions
+- ECR repository management
+- CloudFormation stack operations
 
 ## Cost Optimization
 
 - **Pay-per-request**: No idle costs with AgentCore Runtime
 - **Prompt caching**: Reduces Bedrock token costs
 - **File-based search**: No vector database costs in Phase 1
+- **Auto-scaling**: Resources scale with demand
 - **Managed services**: Minimal infrastructure overhead
+
+## Phase 1 Scope
+
+This implementation focuses on:
+
+✅ Repository document integration (clone + file search)  
+✅ Conversation memory (STM + LTM via AgentCore)  
+✅ Basic Q&A with context retrieval  
+✅ Strands Agent with `@tool` decorator  
+✅ CDK deployment with Docker image assets  
+
+Phase 2 will add email interface, command execution, and external knowledge sources.
 
 ## Support
 
 For issues or questions:
 
-1. Check the [GitHub Issues](https://github.com/aws-samples/personal-account-manager/issues)
+1. Check the [GitHub Issues](https://github.com/icoxfog417/personal-account-manager/issues)
 2. Review the [Design Document](spec/design.md)
-3. Contact the development team
+3. Review the [Requirements Document](spec/requirements.md)
 
 ## License
 
-This project is licensed under the MIT-0 License. See the LICENSE file for details.
+This project is licensed under the MIT-0 License.

@@ -5,7 +5,9 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "aws-cdk-lib>=2.220.0",
     "bedrock-agentcore-starter-toolkit>=0.1.21",
+    "constructs>=10.0.0",
     "gitpython>=3.1.45",
     "strands-agents>=1.13.0",
     "strands-agents-tools>=0.2.12",
