@@ -18,7 +18,10 @@ export class SupportAgentStack extends cdk.Stack {
     });
 
     const agentRuntimeArtifact = agentcore.AgentRuntimeArtifact.fromAsset(
-      path.join(__dirname, '../../agent')
+      path.join(__dirname, '../../agent'),
+      {
+        platform: cdk.aws_ecr_assets.Platform.LINUX_ARM64,
+      }
     );
 
     const envVars: { [key: string]: string } = {
