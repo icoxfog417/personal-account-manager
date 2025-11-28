@@ -141,26 +141,16 @@ Resources:
                     echo "CDK already bootstrapped"
                   fi
                 - echo "Deploying CDK stack..."
-                - npx cdk deploy --require-approval never --region "$DEPLOYMENT_REGION"
+                - npx cdk deploy --require-approval never --region "$DEPLOYMENT_REGION" --outputs-file cdk-outputs.json
                 - echo "Extracting deployment outputs..."
                 - |
-                  AGENT_STACK_NAME=$(aws cloudformation describe-stacks --region "$DEPLOYMENT_REGION" --query "Stacks[?StackStatus!='DELETE_COMPLETE' && contains(StackName, 'SupportAgent')].StackName" --output text | head -n1)
-                  if [ -n "$AGENT_STACK_NAME" ]; then
-                    RUNTIME_ARN=$(aws cloudformation describe-stacks --stack-name "$AGENT_STACK_NAME" --region "$DEPLOYMENT_REGION" --query "Stacks[0].Outputs[?contains(OutputKey, 'RuntimeArn')].OutputValue" --output text)
-                    RUNTIME_ID=$(aws cloudformation describe-stacks --stack-name "$AGENT_STACK_NAME" --region "$DEPLOYMENT_REGION" --query "Stacks[0].Outputs[?contains(OutputKey, 'RuntimeId')].OutputValue" --output text)
-                    IMAGE_URI=$(aws cloudformation describe-stacks --stack-name "$AGENT_STACK_NAME" --region "$DEPLOYMENT_REGION" --query "Stacks[0].Outputs[?contains(OutputKey, 'ImageUri')].OutputValue" --output text)
-                    
-                    echo "Agent Stack Name: $AGENT_STACK_NAME"
-                    echo "Runtime ARN: $RUNTIME_ARN"
-                    echo "Runtime ID: $RUNTIME_ID"
-                    echo "Image URI: $IMAGE_URI"
-                  else
-                    echo "Warning: Could not find agent stack"
-                    AGENT_STACK_NAME="Not found"
-                    RUNTIME_ARN="Not found"
-                    RUNTIME_ID="Not found"
-                    IMAGE_URI="Not found"
-                  fi
+                  AGENT_STACK_NAME=$(jq -r 'keys[0]' cdk-outputs.json)
+                  RUNTIME_ARN=$(jq -r ".\"$AGENT_STACK_NAME\".AgentCoreRuntimeArn" cdk-outputs.json)
+                  RUNTIME_ID=$(jq -r ".\"$AGENT_STACK_NAME\".AgentCoreRuntimeId" cdk-outputs.json)
+                  
+                  echo "Agent Stack Name: $AGENT_STACK_NAME"
+                  echo "Runtime ARN: $RUNTIME_ARN"
+                  echo "Runtime ID: $RUNTIME_ID"
 
             post_build:
               commands:
