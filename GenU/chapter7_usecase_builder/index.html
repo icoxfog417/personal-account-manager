@@ -1,0 +1,326 @@
+<!doctype html><html lang=en class=no-js> <head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="AI-powered customer support agent built with Strands Agent and AgentCore Runtime"><meta name=author content=AWS><link href=https://icoxfog417.github.io/personal-account-manager/GenU/chapter7_usecase_builder/ rel=canonical><link href=../chapter6_writing_meeting/ rel=prev><link href=../chapter8_deployment/ rel=next><link rel=icon href=../../assets/images/favicon.png><meta name=generator content="mkdocs-1.6.1, mkdocs-material-9.7.0"><title>Use Case Builder - Personal AWS Support Agent</title><link rel=stylesheet href=../../assets/stylesheets/main.618322db.min.css><link rel=stylesheet href=../../assets/stylesheets/palette.ab4e12ef.min.css><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel=stylesheet href=../../stylesheets/extra.css><script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script></head> <body dir=ltr data-md-color-scheme=default data-md-color-primary=indigo data-md-color-accent=pink> <input class=md-toggle data-md-toggle=drawer type=checkbox id=__drawer autocomplete=off> <input class=md-toggle data-md-toggle=search type=checkbox id=__search autocomplete=off> <label class=md-overlay for=__drawer></label> <div data-md-component=skip> <a href=#genu-7 class=md-skip> Skip to content </a> </div> <div data-md-component=announce> </div> <header class="md-header md-header--shadow" data-md-component=header> <nav class="md-header__inner md-grid" aria-label=Header> <a href=../.. title="Personal AWS Support Agent" class="md-header__button md-logo" aria-label="Personal AWS Support Agent" data-md-component=logo> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5"/></svg> </a> <label class="md-header__button md-icon" for=__drawer> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg> </label> <div class=md-header__title data-md-component=header-title> <div class=md-header__ellipsis> <div class=md-header__topic> <span class=md-ellipsis> Personal AWS Support Agent </span> </div> <div class=md-header__topic data-md-component=header-topic> <span class=md-ellipsis> Use Case Builder </span> </div> </div> </div> <label class="md-header__button md-icon" for=__search> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg> </label> <div class=md-search data-md-component=search role=dialog> <label class=md-search__overlay for=__search></label> <div class=md-search__inner role=search> <form class=md-search__form name=search> <input type=text class=md-search__input name=query aria-label=Search placeholder=Search autocapitalize=off autocorrect=off autocomplete=off spellcheck=false data-md-component=search-query required> <label class="md-search__icon md-icon" for=__search> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg> </label> <nav class=md-search__options aria-label=Search> <button type=reset class="md-search__icon md-icon" title=Clear aria-label=Clear tabindex=-1> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> </button> </nav> <div class=md-search__suggest data-md-component=search-suggest></div> </form> <div class=md-search__output> <div class=md-search__scrollwrap tabindex=0 data-md-scrollfix> <div class=md-search-result data-md-component=search-result> <div class=md-search-result__meta> Initializing search </div> <ol class=md-search-result__list role=presentation></ol> </div> </div> </div> </div> </div> <div class=md-header__source> <a href=https://github.com/icoxfog417/personal-account-manager title="Go to repository" class=md-source data-md-component=source> <div class="md-source__icon md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg> </div> <div class=md-source__repository> Github: personal-account-manager </div> </a> </div> </nav> </header> <div class=md-container data-md-component=container> <main class=md-main data-md-component=main> <div class="md-main__inner md-grid"> <div class="md-sidebar md-sidebar--primary" data-md-component=sidebar data-md-type=navigation> <div class=md-sidebar__scrollwrap> <div class=md-sidebar__inner> <nav class="md-nav md-nav--primary md-nav--integrated" aria-label=Navigation data-md-level=0> <label class=md-nav__title for=__drawer> <a href=../.. title="Personal AWS Support Agent" class="md-nav__button md-logo" aria-label="Personal AWS Support Agent" data-md-component=logo> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5"/></svg> </a> Personal AWS Support Agent </label> <div class=md-nav__source> <a href=https://github.com/icoxfog417/personal-account-manager title="Go to repository" class=md-source data-md-component=source> <div class="md-source__icon md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg> </div> <div class=md-source__repository> Github: personal-account-manager </div> </a> </div> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../.. class=md-nav__link> <span class=md-ellipsis> Home </span> </a> </li> <li class="md-nav__item md-nav__item--section md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_2> <label class=md-nav__link for=__nav_2 id=__nav_2_label tabindex> <span class=md-ellipsis> About AWS </span> <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_2_label aria-expanded=false> <label class=md-nav__title for=__nav_2> <span class="md-nav__icon md-icon"></span> About AWS </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../AWS-General/aws_questions/ class=md-nav__link> <span class=md-ellipsis> AWS Questions </span> </a> </li> <li class=md-nav__item> <a href=../../AWS-General/bedrock_faq/ class=md-nav__link> <span class=md-ellipsis> Bedrock FAQ </span> </a> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested"> <input class="md-nav__toggle md-toggle " type=checkbox id=__nav_3 checked> <label class=md-nav__link for=__nav_3 id=__nav_3_label tabindex> <span class=md-ellipsis> About GenU </span> <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_3_label aria-expanded=true> <label class=md-nav__title for=__nav_3> <span class="md-nav__icon md-icon"></span> About GenU </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../chapter1_overview_setup/ class=md-nav__link> <span class=md-ellipsis> Overview & Setup </span> </a> </li> <li class=md-nav__item> <a href=../chapter2_chat_functionality/ class=md-nav__link> <span class=md-ellipsis> Chat Functionality </span> </a> </li> <li class=md-nav__item> <a href=../chapter3_rag_functionality/ class=md-nav__link> <span class=md-ellipsis> RAG Functionality </span> </a> </li> <li class=md-nav__item> <a href=../chapter4_generation_functions/ class=md-nav__link> <span class=md-ellipsis> Generation Functions </span> </a> </li> <li class=md-nav__item> <a href=../chapter5_image_voice/ class=md-nav__link> <span class=md-ellipsis> Image & Voice </span> </a> </li> <li class=md-nav__item> <a href=../chapter6_writing_meeting/ class=md-nav__link> <span class=md-ellipsis> Writing & Meeting </span> </a> </li> <li class="md-nav__item md-nav__item--active"> <input class="md-nav__toggle md-toggle" type=checkbox id=__toc> <label class="md-nav__link md-nav__link--active" for=__toc> <span class=md-ellipsis> Use Case Builder </span> <span class="md-nav__icon md-icon"></span> </label> <a href=./ class="md-nav__link md-nav__link--active"> <span class=md-ellipsis> Use Case Builder </span> </a> <nav class="md-nav md-nav--secondary" aria-label="Table of contents"> <label class=md-nav__title for=__toc> <span class="md-nav__icon md-icon"></span> Table of contents </label> <ul class=md-nav__list data-md-component=toc data-md-scrollfix> <li class=md-nav__item> <a href=#71 class=md-nav__link> <span class=md-ellipsis> 7.1 ユースケースビルダーとは </span> </a> <nav class=md-nav aria-label="7.1 ユースケースビルダーとは"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#711 class=md-nav__link> <span class=md-ellipsis> 7.1.1 概要 </span> </a> </li> <li class=md-nav__item> <a href=#712 class=md-nav__link> <span class=md-ellipsis> 7.1.2 ユースケースビルダーの仕組み </span> </a> <nav class=md-nav aria-label="7.1.2 ユースケースビルダーの仕組み"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#_1 class=md-nav__link> <span class=md-ellipsis> プロンプトテンプレート </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#713 class=md-nav__link> <span class=md-ellipsis> 7.1.3 ユースケースビルダーのメリット </span> </a> <nav class=md-nav aria-label="7.1.3 ユースケースビルダーのメリット"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#_2 class=md-nav__link> <span class=md-ellipsis> 開発者にとってのメリット </span> </a> </li> <li class=md-nav__item> <a href=#_3 class=md-nav__link> <span class=md-ellipsis> ユーザーにとってのメリット </span> </a> </li> <li class=md-nav__item> <a href=#_4 class=md-nav__link> <span class=md-ellipsis> 組織にとってのメリット </span> </a> </li> </ul> </nav> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#72 class=md-nav__link> <span class=md-ellipsis> 7.2 プレースホルダーの種類 </span> </a> <nav class=md-nav aria-label="7.2 プレースホルダーの種類"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#721-text class=md-nav__link> <span class=md-ellipsis> 7.2.1 {{text:ラベル}} </span> </a> </li> <li class=md-nav__item> <a href=#722-form class=md-nav__link> <span class=md-ellipsis> 7.2.2 {{form:ラベル}} </span> </a> </li> <li class=md-nav__item> <a href=#723-retrieveknowledgebase class=md-nav__link> <span class=md-ellipsis> 7.2.3 {{retrieveKnowledgeBase:ラベル}} </span> </a> </li> <li class=md-nav__item> <a href=#724-retrievekendra class=md-nav__link> <span class=md-ellipsis> 7.2.4 {{retrieveKendra:ラベル}} </span> </a> </li> <li class=md-nav__item> <a href=#725-select12 class=md-nav__link> <span class=md-ellipsis> 7.2.5 {{select:ラベル:選択肢1,選択肢2}} </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#73 class=md-nav__link> <span class=md-ellipsis> 7.3 ユースケースビルダーの使い方 </span> </a> <nav class=md-nav aria-label="7.3 ユースケースビルダーの使い方"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#731 class=md-nav__link> <span class=md-ellipsis> 7.3.1 ビルダーモードの有効化 </span> </a> </li> <li class=md-nav__item> <a href=#732 class=md-nav__link> <span class=md-ellipsis> 7.3.2 新しいユースケースの作成 </span> </a> <nav class=md-nav aria-label="7.3.2 新しいユースケースの作成"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#_5 class=md-nav__link> <span class=md-ellipsis> 基本的な手順 </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#733-1 class=md-nav__link> <span class=md-ellipsis> 7.3.3 実践例1：日英翻訳ツール </span> </a> </li> <li class=md-nav__item> <a href=#734-2 class=md-nav__link> <span class=md-ellipsis> 7.3.4 実践例2：レシピ提案システム </span> </a> </li> <li class=md-nav__item> <a href=#735-3faqrag class=md-nav__link> <span class=md-ellipsis> 7.3.5 実践例3：社内FAQ検索（RAG活用） </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#74 class=md-nav__link> <span class=md-ellipsis> 7.4 ユースケースの共有と管理 </span> </a> <nav class=md-nav aria-label="7.4 ユースケースの共有と管理"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#741 class=md-nav__link> <span class=md-ellipsis> 7.4.1 ユースケースの公開 </span> </a> <nav class=md-nav aria-label="7.4.1 ユースケースの公開"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#_6 class=md-nav__link> <span class=md-ellipsis> 非公開（デフォルト） </span> </a> </li> <li class=md-nav__item> <a href=#_7 class=md-nav__link> <span class=md-ellipsis> 公開 </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#742-url class=md-nav__link> <span class=md-ellipsis> 7.4.2 ユースケースのURL共有 </span> </a> </li> <li class=md-nav__item> <a href=#743 class=md-nav__link> <span class=md-ellipsis> 7.4.3 お気に入り機能 </span> </a> </li> <li class=md-nav__item> <a href=#744 class=md-nav__link> <span class=md-ellipsis> 7.4.4 ユースケースのエクスポート/インポート </span> </a> <nav class=md-nav aria-label="7.4.4 ユースケースのエクスポート/インポート"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#_8 class=md-nav__link> <span class=md-ellipsis> エクスポート </span> </a> </li> <li class=md-nav__item> <a href=#_9 class=md-nav__link> <span class=md-ellipsis> インポート </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#745 class=md-nav__link> <span class=md-ellipsis> 7.4.5 ユースケースの編集と削除 </span> </a> <nav class=md-nav aria-label="7.4.5 ユースケースの編集と削除"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#_10 class=md-nav__link> <span class=md-ellipsis> 編集 </span> </a> </li> <li class=md-nav__item> <a href=#_11 class=md-nav__link> <span class=md-ellipsis> 削除 </span> </a> </li> </ul> </nav> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#75 class=md-nav__link> <span class=md-ellipsis> 7.5 高度なユースケース作成 </span> </a> <nav class=md-nav aria-label="7.5 高度なユースケース作成"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#751-xml class=md-nav__link> <span class=md-ellipsis> 7.5.1 XMLタグの活用 </span> </a> </li> <li class=md-nav__item> <a href=#752 class=md-nav__link> <span class=md-ellipsis> 7.5.2 複数のプレースホルダーの組み合わせ </span> </a> </li> <li class=md-nav__item> <a href=#753 class=md-nav__link> <span class=md-ellipsis> 7.5.3 入力例の設定 </span> </a> </li> <li class=md-nav__item> <a href=#754 class=md-nav__link> <span class=md-ellipsis> 7.5.4 モデルの固定 </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#76- class=md-nav__link> <span class=md-ellipsis> 7.6 ユースケースビルダー - ビルダー </span> </a> <nav class=md-nav aria-label="7.6 ユースケースビルダー - ビルダー"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#761 class=md-nav__link> <span class=md-ellipsis> 7.6.1 概要 </span> </a> </li> <li class=md-nav__item> <a href=#762 class=md-nav__link> <span class=md-ellipsis> 7.6.2 使い方 </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#77-ready-to-use class=md-nav__link> <span class=md-ellipsis> 7.7 Ready-to-Useユースケース </span> </a> <nav class=md-nav aria-label="7.7 Ready-to-Useユースケース"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#771- class=md-nav__link> <span class=md-ellipsis> 7.7.1 ユースケースビルダー - ビルダー </span> </a> </li> <li class=md-nav__item> <a href=#772 class=md-nav__link> <span class=md-ellipsis> 7.7.2 議事録作成アシスタント </span> </a> </li> <li class=md-nav__item> <a href=#773 class=md-nav__link> <span class=md-ellipsis> 7.7.3 その他のユースケース </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#78 class=md-nav__link> <span class=md-ellipsis> 7.8 ベストプラクティス </span> </a> <nav class=md-nav aria-label="7.8 ベストプラクティス"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#781 class=md-nav__link> <span class=md-ellipsis> 7.8.1 プロンプトテンプレート作成のコツ </span> </a> <nav class=md-nav aria-label="7.8.1 プロンプトテンプレート作成のコツ"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#_12 class=md-nav__link> <span class=md-ellipsis> 明確な役割を定義 </span> </a> </li> <li class=md-nav__item> <a href=#xml class=md-nav__link> <span class=md-ellipsis> XMLタグで構造化 </span> </a> </li> <li class=md-nav__item> <a href=#_13 class=md-nav__link> <span class=md-ellipsis> 出力形式を明確に指定 </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#782 class=md-nav__link> <span class=md-ellipsis> 7.8.2 ユーザビリティの向上 </span> </a> <nav class=md-nav aria-label="7.8.2 ユーザビリティの向上"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#_14 class=md-nav__link> <span class=md-ellipsis> わかりやすいラベル </span> </a> </li> <li class=md-nav__item> <a href=#_15 class=md-nav__link> <span class=md-ellipsis> 入力例の提供 </span> </a> </li> <li class=md-nav__item> <a href=#_16 class=md-nav__link> <span class=md-ellipsis> 明確な概要 </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#783 class=md-nav__link> <span class=md-ellipsis> 7.8.3 保守性の確保 </span> </a> <nav class=md-nav aria-label="7.8.3 保守性の確保"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#_17 class=md-nav__link> <span class=md-ellipsis> バージョン管理 </span> </a> </li> <li class=md-nav__item> <a href=#_18 class=md-nav__link> <span class=md-ellipsis> テスト </span> </a> </li> <li class=md-nav__item> <a href=#_19 class=md-nav__link> <span class=md-ellipsis> ドキュメント </span> </a> </li> </ul> </nav> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#_20 class=md-nav__link> <span class=md-ellipsis> まとめ </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=../chapter8_deployment/ class=md-nav__link> <span class=md-ellipsis> Deployment </span> </a> </li> <li class=md-nav__item> <a href=../chapter9_security/ class=md-nav__link> <span class=md-ellipsis> Security </span> </a> </li> </ul> </nav> </li> </ul> </nav> </div> </div> </div> <div class=md-content data-md-component=content> <article class="md-content__inner md-typeset"> <a href=https://github.com/icoxfog417/personal-account-manager/edit/master/docs/GenU/chapter7_usecase_builder.md title="Edit this page" class="md-content__button md-icon" rel=edit> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg> </a> <h1 id=genu-7>Genu（ジェンユー）完全ガイド - 第7章：ユースケースビルダー</h1> <h2 id=71>7.1 ユースケースビルダーとは</h2> <h3 id=711>7.1.1 概要</h3> <p>ユースケースビルダーは、<strong>独自のユースケースを簡単に作成/利用/共有できるGenuの革新的な機能</strong>です。</p> <p><strong>最大の特徴</strong>： - <strong>プログラミング不要</strong>：画面の追加等の開発作業は一切不要 - <strong>プロンプトテンプレート</strong>：プロンプトの雛形を定義するだけ - <strong>自動UI生成</strong>：入力フォーム等の必要な画面を自動作成 - <strong>データ統合</strong>：KendraやKnowledge Baseなどのデータソースと連携可能</p> <p><strong>できること</strong>： - 独自の生成AIユースケースを作成 - ユーザー入力を受け取る - データソースから情報を検索 - 検索結果とユーザー入力を組み合わせてタスクを実行 - 作成したユースケースを組織内で共有</p> <h3 id=712>7.1.2 ユースケースビルダーの仕組み</h3> <h4 id=_1>プロンプトテンプレート</h4> <p><strong>プロンプトテンプレート</strong>は、プロンプトの雛形です。実行時に「ユーザーの入力」や「検索結果」などで置き換えられる<strong>プレースホルダー</strong>を設定することで、動的なタスクを実行できます。</p> <p><strong>プレースホルダーの記法</strong>： <div class=highlight><pre><span></span><code>{{入力タイプ:ラベル}}
+</code></pre></div></p> <p><strong>処理の流れ</strong>： <div class=highlight><pre><span></span><code>1. プロンプトテンプレートを定義
+   ↓
+2. プレースホルダーに基づいて入力フォームが自動生成
+   ↓
+3. ユーザーがフォームに入力
+   ↓
+4. プレースホルダーが実際の値で置き換えられる
+   ↓
+5. 完成したプロンプトをLLMに送信
+   ↓
+6. 結果を表示
+</code></pre></div></p> <h3 id=713>7.1.3 ユースケースビルダーのメリット</h3> <h4 id=_2>開発者にとってのメリット</h4> <ul> <li>コーディング不要</li> <li>UI設計不要</li> <li>迅速なプロトタイピング</li> <li>簡単なメンテナンス</li> </ul> <h4 id=_3>ユーザーにとってのメリット</h4> <ul> <li>統一されたインターフェース</li> <li>繰り返しのタスクを効率化</li> <li>プロンプト作成の知識不要</li> <li>組織の知識を活用</li> </ul> <h4 id=_4>組織にとってのメリット</h4> <ul> <li>ベストプラクティスの共有</li> <li>業務の標準化</li> <li>ナレッジの蓄積</li> <li>生産性の向上</li> </ul> <h2 id=72>7.2 プレースホルダーの種類</h2> <h3 id=721-text>7.2.1 {{text:ラベル}}</h3> <p><strong>用途</strong>：テキスト入力フォームを作成</p> <p><strong>記法</strong>： <div class=highlight><pre><span></span><code>{{text:ラベル}}
+または
+{{text}}  # ラベルを省略
+</code></pre></div></p> <p><strong>動作</strong>： - ユーザーが入力したテキストで置き換えられる - ラベル付きのテキスト入力ボックスが自動生成される</p> <p><strong>例</strong>： <div class=highlight><pre><span></span><code>あなたは翻訳の専門家です。
+
+以下の文章を英語に翻訳してください：
+
+{{text:翻訳したい文章}}
+</code></pre></div></p> <p><strong>生成されるUI</strong>： <div class=highlight><pre><span></span><code>┌─────────────────────────┐
+│ 翻訳したい文章          │
+├─────────────────────────┤
+│ [                     ] │  ← テキスト入力ボックス
+│ [                     ] │
+└─────────────────────────┘
+[実行]
+</code></pre></div></p> <h3 id=722-form>7.2.2 {{form:ラベル}}</h3> <p><strong>用途</strong>：検索用質問を入力するが、プロンプトには埋め込まない</p> <p><strong>記法</strong>： <div class=highlight><pre><span></span><code>{{form:ラベル}}
+</code></pre></div></p> <p><strong>動作</strong>： - <code>{{retrieveXXX:ラベル}}</code>と一緒に使用 - ユーザーの質問を入力するための入力フォームを作成 - <strong>質問自体はプロンプトに含まれない</strong> - 検索クエリとしてのみ使用される</p> <p><strong>{{text}}との違い</strong>： - <code>{{text:ラベル}}</code>：入力内容がプロンプトに埋め込まれる - <code>{{form:ラベル}}</code>：入力内容はプロンプトに埋め込まれない（検索のみに使用）</p> <p><strong>使用場面</strong>： 「検索結果を利用したいが、質問内容そのものはプロンプトに埋め込みたくない」場合</p> <p><strong>例</strong>： <div class=highlight><pre><span></span><code>あなたは社内ヘルプデスクです。
+
+以下の社内ドキュメントに基づいて回答してください：
+
+&lt;documents&gt;
+{{retrieveKnowledgeBase:検索}}
+&lt;/documents&gt;
+
+回答は簡潔かつ具体的にしてください。
+
+{{form:検索}}
+</code></pre></div></p> <p>この例では、ユーザーの質問は検索に使用されますが、プロンプトには直接埋め込まれません。</p> <h3 id=723-retrieveknowledgebase>7.2.3 {{retrieveKnowledgeBase:ラベル}}</h3> <p><strong>用途</strong>：Knowledge Baseから検索結果を取得</p> <p><strong>記法</strong>： <div class=highlight><pre><span></span><code>{{retrieveKnowledgeBase:ラベル}}
+</code></pre></div></p> <p><strong>動作</strong>： - Knowledge Baseから関連ドキュメントを検索 - 検索結果（テキスト）でプレースホルダーを置き換え - 同一ラベルの<code>{{text:ラベル}}</code>または<code>{{form:ラベル}}</code>が必要</p> <p><strong>必須条件</strong>： - Knowledge Basesが有効化されていること - 同じラベルの<code>{{text}}</code>または<code>{{form}}</code>が存在すること</p> <p><strong>例</strong>： <div class=highlight><pre><span></span><code>あなたは社内の技術サポート担当者です。
+
+以下の技術ドキュメントに基づいて、質問に答えてください：
+
+&lt;documents&gt;
+{{retrieveKnowledgeBase:質問}}
+&lt;/documents&gt;
+
+&lt;question&gt;
+{{text:質問}}
+&lt;/question&gt;
+
+回答は手順を番号付きリストで示してください。
+</code></pre></div></p> <p><strong>実行時の動作</strong>： 1. ユーザーが「質問」欄に「APIの認証方法は？」と入力 2. Knowledge Baseで「APIの認証方法は？」を検索 3. 検索結果が<code>{{retrieveKnowledgeBase:質問}}</code>に埋め込まれる 4. ユーザーの質問が<code>{{text:質問}}</code>に埋め込まれる 5. 完成したプロンプトをLLMに送信</p> <h3 id=724-retrievekendra>7.2.4 {{retrieveKendra:ラベル}}</h3> <p><strong>用途</strong>：Amazon Kendraから検索結果を取得</p> <p><strong>記法</strong>： <div class=highlight><pre><span></span><code>{{retrieveKendra:ラベル}}
+</code></pre></div></p> <p><strong>動作</strong>： - Amazon Kendraから関連ドキュメントを検索 - 検索結果（テキスト）でプレースホルダーを置き換え - 同一ラベルの<code>{{text:ラベル}}</code>または<code>{{form:ラベル}}</code>が必要</p> <p><strong>必須条件</strong>： - Amazon Kendraが有効化されていること - 同じラベルの<code>{{text}}</code>または<code>{{form}}</code>が存在すること</p> <p><strong>Knowledge Basesとの選択</strong>： - 両方有効な場合、どちらを使うか選択可能 - 用途に応じて使い分け</p> <h3 id=725-select12>7.2.5 {{select:ラベル:選択肢1,選択肢2}}</h3> <p><strong>用途</strong>：セレクトボックス（ドロップダウン）を作成</p> <p><strong>記法</strong>： <div class=highlight><pre><span></span><code>{{select:ラベル:選択肢1,選択肢2,選択肢3}}
+または
+{{select::選択肢1,選択肢2}}  # ラベルを非表示
+</code></pre></div></p> <p><strong>動作</strong>： - 選択肢から1つを選択 - 選択された値でプレースホルダーを置き換え</p> <p><strong>注意</strong>： - ラベルとオプションの省略は不可 - 空文字ラベル<code>{{select::...}}</code>は可能だが、無ラベルとは異なる</p> <p><strong>例</strong>： <div class=highlight><pre><span></span><code>あなたは文章のトーン変換の専門家です。
+
+以下の文章を{{select:トーン:フォーマル,カジュアル,フレンドリー,ビジネス}}な
+トーンに書き直してください：
+
+{{text:元の文章}}
+</code></pre></div></p> <p><strong>生成されるUI</strong>： <div class=highlight><pre><span></span><code>┌─────────────────────────┐
+│ トーン                  │
+├─────────────────────────┤
+│ [フォーマル ▼]         │  ← ドロップダウン
+└─────────────────────────┘
+
+┌─────────────────────────┐
+│ 元の文章                │
+├─────────────────────────┤
+│ [                     ] │
+└─────────────────────────┘
+[実行]
+</code></pre></div></p> <h2 id=73>7.3 ユースケースビルダーの使い方</h2> <h3 id=731>7.3.1 ビルダーモードの有効化</h3> <ol> <li> <p><strong>Genuにログイン</strong></p> </li> <li> <p><strong>ビルダーモードをON</strong></p> </li> <li>画面左上の「ビルダーモード」トグルをクリック</li> <li> <p>ユースケースビルダーの画面に遷移</p> </li> <li> <p><strong>画面構成の確認</strong></p> </li> <li>左サイドバー：既存のユースケース一覧</li> <li>メインエリア：ユースケースの作成・編集</li> <li>右サイドバー：プレビュー</li> </ol> <h3 id=732>7.3.2 新しいユースケースの作成</h3> <h4 id=_5>基本的な手順</h4> <ol> <li><strong>新規作成開始</strong></li> <li>サイドバーの「マイユースケース」をクリック</li> <li> <p>右上の「新規作成」ボタンをクリック</p> </li> <li> <p><strong>基本情報の入力</strong></p> </li> <li><strong>タイトル</strong>：ユースケースの名前</li> <li><strong>概要</strong>：機能の簡単な説明</li> <li> <p><strong>アイコン</strong>（オプション）：アイコンの選択</p> </li> <li> <p><strong>プロンプトテンプレートの作成</strong></p> </li> <li>プロンプトテンプレート欄にテンプレートを記述</li> <li> <p>プレースホルダーを適切に配置</p> </li> <li> <p><strong>プレビューで確認</strong></p> </li> <li>右側のプレビュー画面で動作を確認</li> <li> <p>実際に入力して結果をテスト</p> </li> <li> <p><strong>保存</strong></p> </li> <li>「作成」ボタンをクリックして保存</li> </ol> <h3 id=733-1>7.3.3 実践例1：日英翻訳ツール</h3> <p><strong>目的</strong>：言語を自動判別して日本語・英語間の翻訳を行う</p> <p><strong>タイトル</strong>： <div class=highlight><pre><span></span><code>翻訳（日本語-英語）
+</code></pre></div></p> <p><strong>概要</strong>： <div class=highlight><pre><span></span><code>入力された文章を日本語・英語間で翻訳します。
+</code></pre></div></p> <p><strong>プロンプトテンプレート</strong>： <div class=highlight><pre><span></span><code>あなたは、日本語・英語の翻訳エキスパートです。
+
+以下の文章を、英語が入力された場合は日本語に、
+日本語が入力された場合は英語に翻訳してください。
+ただし、翻訳後のテキスト以外は絶対に出力しないでください。
+
+{{text:元の文章}}
+</code></pre></div></p> <p><strong>使用例</strong>：</p> <p>入力： <div class=highlight><pre><span></span><code>元の文章: AWS and the third-party model providers will not use any
+inputs to or outputs from Amazon Bedrock to train Amazon Nova,
+Amazon Titan, or any third-party models.
+</code></pre></div></p> <p>出力： <div class=highlight><pre><span></span><code>AWSおよびサードパーティのモデルプロバイダーは、Amazon Bedrock
+への入力またはAmazon Bedrockからの出力を、Amazon Nova、Amazon Titan、
+またはサードパーティのモデルのトレーニングに使用することはありません。
+</code></pre></div></p> <h3 id=734-2>7.3.4 実践例2：レシピ提案システム</h3> <p><strong>目的</strong>：食材、人数、要望を入力として、カスタマイズされたレシピを提案</p> <p><strong>タイトル</strong>： <div class=highlight><pre><span></span><code>レシピ提案
+</code></pre></div></p> <p><strong>概要</strong>： <div class=highlight><pre><span></span><code>使用できる食材と人数、要望を入力すると、
+それに合わせたレシピを提案します。
+</code></pre></div></p> <p><strong>プロンプトテンプレート</strong>： <div class=highlight><pre><span></span><code>あなたは経験豊富なシェフです。
+
+以下の条件に基づいて、美味しいレシピを1つ提案してください。
+
+&lt;条件&gt;
+使用できる食材: {{text:使用できる食材}}
+人数: {{text:人数}}
+その他の要望: {{text:その他の要望（アレルギー、調理時間など）}}
+&lt;/条件&gt;
+
+以下の形式で出力してください：
+
+## 料理名
+
+### 材料（{{text:人数}}人分）
+- [材料名]: [分量]
+- ...
+
+### 調理時間
+約XX分
+
+### 手順
+1. [手順1]
+2. [手順2]
+...
+
+### ポイント
+- [ポイント1]
+- [ポイント2]
+</code></pre></div></p> <p><strong>使用例</strong>：</p> <p>入力： <div class=highlight><pre><span></span><code>使用できる食材: 鶏肉、玉ねぎ、にんじん、じゃがいも
+人数: 4
+その他の要望: 子供でも食べやすい味付けで、調理時間は30分以内
+</code></pre></div></p> <p>出力： <div class=highlight><pre><span></span><code>## チキンと野菜のシンプルカレー
+
+### 材料（4人分）
+- 鶏もも肉: 400g
+- 玉ねぎ: 2個
+- にんじん: 1本
+- じゃがいも: 3個
+- カレールー: 4皿分
+- 水: 600ml
+- サラダ油: 大さじ1
+
+### 調理時間
+約30分
+
+### 手順
+1. 鶏肉は一口大に切り、野菜は食べやすい大きさに切る
+2. 鍋に油を熱し、鶏肉を炒める
+3. 玉ねぎ、にんじん、じゃがいもを加えて炒める
+4. 水を加えて沸騰させ、アクを取る
+5. 中火で15分煮込む
+6. 火を止めてカレールーを溶かし、再び弱火で5分煮込む
+
+### ポイント
+- 野菜は子供が食べやすい大きさに切りましょう
+- カレールーは甘口を使用すると子供も食べやすくなります
+- 煮込み時間を短縮するため、野菜は小さめに切るのがコツです
+</code></pre></div></p> <h3 id=735-3faqrag>7.3.5 実践例3：社内FAQ検索（RAG活用）</h3> <p><strong>目的</strong>：社内ドキュメントから情報を検索して回答</p> <p><strong>タイトル</strong>： <div class=highlight><pre><span></span><code>社内FAQ検索
+</code></pre></div></p> <p><strong>概要</strong>： <div class=highlight><pre><span></span><code>社内ドキュメントに基づいて質問に回答します。
+</code></pre></div></p> <p><strong>プロンプトテンプレート</strong>： <div class=highlight><pre><span></span><code>あなたは社内のヘルプデスク担当者です。
+
+以下の社内ドキュメントに基づいて、社員からの質問に答えてください。
+
+&lt;documents&gt;
+{{retrieveKnowledgeBase:質問}}
+&lt;/documents&gt;
+
+&lt;instructions&gt;
+- 回答は簡潔かつ具体的にしてください
+- 手順がある場合は番号付きリストで示してください
+- ドキュメントに記載がない場合は、
+  「申し訳ございませんが、該当する情報が見つかりませんでした。
+  ITヘルプデスク（内線1234）にお問い合わせください。」
+  と回答してください
+&lt;/instructions&gt;
+
+{{form:質問}}
+</code></pre></div></p> <p><strong>使用例</strong>：</p> <p>入力： <div class=highlight><pre><span></span><code>質問: 社内WiFiにスマートフォンを接続する方法を教えてください
+</code></pre></div></p> <p>システムの動作： 1. Knowledge Baseで「社内WiFiにスマートフォンを接続する方法」を検索 2. 関連ドキュメントを取得 3. 検索結果をプロンプトに埋め込み 4. LLMが回答を生成</p> <p>出力例： <div class=highlight><pre><span></span><code>社内WiFiにスマートフォンを接続する方法は以下の通りです：
+
+1. スマートフォンのWiFi設定を開く
+2. ネットワーク一覧から「CompanyWiFi-Secure」を選択
+3. 認証情報を入力：
+   - ユーザー名：社員番号@company.com
+   - パスワード：社内ポータルと同じパスワード
+4. 「接続」をタップ
+5. 証明書の警告が表示された場合は「信頼する」を選択
+
+接続に問題がある場合は、デバイスを再起動してから
+再度お試しください。
+
+参考：IT基盤利用ガイド.pdf
+</code></pre></div></p> <h2 id=74>7.4 ユースケースの共有と管理</h2> <h3 id=741>7.4.1 ユースケースの公開</h3> <h4 id=_6>非公開（デフォルト）</h4> <p>作成したユースケースは最初は非公開状態です。</p> <p><strong>特徴</strong>： - 作成者のみが利用可能 - マイユースケース一覧に表示</p> <h4 id=_7>公開</h4> <p>ユースケースを組織内の全ユーザーに共有できます。</p> <p><strong>公開手順</strong>： 1. マイユースケースからユースケースを選択 2. 「非公開」ボタンをクリック 3. 「公開」に変更 4. 確認ダイアログでOK</p> <p><strong>公開後</strong>： - すべてのユーザーが利用可能なURLが発行される - 共有ユースケース一覧に表示される - URLを直接共有可能</p> <h3 id=742-url>7.4.2 ユースケースのURL共有</h3> <p>公開したユースケースはURLで共有できます。</p> <p><strong>URL形式</strong>： <div class=highlight><pre><span></span><code>https://[your-genu-url]/usecase/[usecase-id]
+</code></pre></div></p> <p><strong>使い方</strong>： - URLをコピー - メール、チャット、社内Wikiなどで共有 - ログインしているユーザーなら誰でもアクセス可能</p> <h3 id=743>7.4.3 お気に入り機能</h3> <p>よく使うユースケースはお気に入りに登録できます。</p> <p><strong>お気に入り登録</strong>： 1. ユースケースの詳細画面を開く 2. 星アイコンをクリック</p> <p><strong>メリット</strong>： - サイドバーに常時表示 - すぐにアクセス可能 - 自分が作成したものも他人が作成したものもOK</p> <h3 id=744>7.4.4 ユースケースのエクスポート/インポート</h3> <h4 id=_8>エクスポート</h4> <p>ユースケースをJSON形式でエクスポートできます。</p> <p><strong>手順</strong>： 1. ユースケースの詳細画面を開く 2. エクスポートアイコンをクリック 3. JSONファイルがダウンロードされる</p> <p><strong>用途</strong>： - バックアップ - 他の環境への移行 - バージョン管理 - テンプレートとして配布</p> <h4 id=_9>インポート</h4> <p>エクスポートしたJSONファイルをインポートできます。</p> <p><strong>手順</strong>： 1. ユースケースの新規作成画面を開く 2. インポートアイコンをクリック 3. JSONファイルを選択 4. ユースケースの内容が読み込まれる 5. 必要に応じて編集 6. 保存</p> <h3 id=745>7.4.5 ユースケースの編集と削除</h3> <h4 id=_10>編集</h4> <p><strong>自分が作成したユースケース</strong>： - いつでも編集可能 - 公開中でも編集可能（即座に反映）</p> <p><strong>他人が作成したユースケース</strong>： - 編集不可 - 複製して自分のユースケースとして編集可能</p> <h4 id=_11>削除</h4> <p><strong>削除手順</strong>： 1. マイユースケースから対象を選択 2. 削除ボタンをクリック 3. 確認ダイアログでOK</p> <p><strong>注意</strong>： - 削除は取り消せません - 公開中のユースケースを削除すると、他のユーザーも利用不可になります</p> <h2 id=75>7.5 高度なユースケース作成</h2> <h3 id=751-xml>7.5.1 XMLタグの活用</h3> <p>XMLタグを使用して、プロンプトの構造を明確にします。</p> <p><strong>例</strong>： <div class=highlight><pre><span></span><code>あなたは優秀なマーケティングコピーライターです。
+
+&lt;product_description&gt;
+{{text:製品説明}}
+&lt;/product_description&gt;
+
+&lt;target_audience&gt;
+{{text:ターゲット層}}
+&lt;/target_audience&gt;
+
+&lt;instructions&gt;
+以下の点を考慮してキャッチコピーを作成してください：
+- ターゲット顧客の心に響く表現を使用する
+- 製品の最大の特徴や利益を強調する
+- 覚えやすく、印象に残るフレーズにする
+- 感情に訴えかける要素を含める
+- 簡潔で分かりやすい表現にする
+&lt;/instructions&gt;
+
+&lt;output_format&gt;
+1. [キャッチコピー1]
+2. [キャッチコピー2]
+3. [キャッチコピー3]
+4. [キャッチコピー4]
+5. [キャッチコピー5]
+&lt;/output_format&gt;
+</code></pre></div></p> <h3 id=752>7.5.2 複数のプレースホルダーの組み合わせ</h3> <p>複雑なユースケースでは、複数のプレースホルダーを組み合わせます。</p> <p><strong>例：カスタマーサポート回答生成</strong>： <div class=highlight><pre><span></span><code>あなたはカスタマーサポート担当者です。
+
+&lt;customer_inquiry&gt;
+{{text:顧客からの問い合わせ}}
+&lt;/customer_inquiry&gt;
+
+&lt;product_information&gt;
+{{retrieveKnowledgeBase:製品情報検索}}
+&lt;/product_information&gt;
+
+&lt;response_tone&gt;
+{{select:対応トーン:フォーマル,フレンドリー,共感的}}
+&lt;/response_tone&gt;
+
+&lt;instructions&gt;
+- 選択されたトーンで回答してください
+- 製品情報に基づいて正確に答えてください
+- 問題が解決できない場合は、適切なエスカレーション先を案内してください
+&lt;/instructions&gt;
+
+{{form:製品情報検索}}
+</code></pre></div></p> <h3 id=753>7.5.3 入力例の設定</h3> <p>ユーザーが使い方を理解しやすいよう、入力例を設定できます。</p> <p><strong>設定方法</strong>： 1. ユースケース編集画面で「入力例」セクションを開く 2. 各プレースホルダーの例を入力 3. 複数の例を設定可能</p> <p><strong>メリット</strong>： - ユーザーが使い方を理解しやすい - 適切な入力形式を示せる - 試用しやすい</p> <h3 id=754>7.5.4 モデルの固定</h3> <p>ユースケースごとに使用するモデルを固定できます。</p> <p><strong>設定方法</strong>： 1. ユースケース編集画面で「モデル設定」を開く 2. 使用するモデルを選択 - Claude 3.5 Sonnet：複雑なタスク向け - Claude 3.5 Haiku：高速応答が必要な場合 - Amazon Nova Pro：バランス重視</p> <p><strong>メリット</strong>： - ユーザーがモデルを選ぶ必要がない - タスクに最適なモデルを指定 - コストの管理</p> <h2 id=76->7.6 ユースケースビルダー - ビルダー</h2> <h3 id=761>7.6.1 概要</h3> <p>「ユースケースビルダー - ビルダー」は、ユースケース自体を生成するユースケースです。</p> <p><strong>目的</strong>： プロンプトテンプレートの作成を支援し、ユースケース作成をさらに効率化します。</p> <h3 id=762>7.6.2 使い方</h3> <p><strong>プロンプトテンプレート</strong>： <div class=highlight><pre><span></span><code>生成AIに特定のタスクを実行させるための、ユーザ入力と命令から
+構成されるプロンプトを作成してください。
+
+まず、ユーザが実現したいことは&lt;content&gt;&lt;/content&gt;に与えられます。
+この内容を実現するためのプロンプトを記述してください。
+同時に、ユーザに入力させたい事項については&lt;input&gt;&lt;/input&gt;に
+与えられる通り実装し、固定のプロンプトを記述した後、最後に
+出力してください。
+
+ユーザからの入力を受け付けるためにはプレースホルダを使用します。
+その記法は&lt;notation&gt;&lt;/notation&gt;で与えられます。
+RAGを利用する場合には&lt;isRagEnabled&gt;&lt;/isRagEnabled&gt;タグが「使う」に
+なるため、必ずRAGをプロンプトに含めてください。
+
+具体的な出力については&lt;example&gt;&lt;/example&gt;を参考にしてください。
+プロンプトについては、&lt;warning&gt;&lt;/warning&gt;の注意点を確実に遵守すること。
+
+&lt;warning&gt;
+- プロンプト中にユーザの入力内容を代入するようにXMLタグを使用して
+  （プレースホルダーは使わずに）、埋め込んでください。
+  良い例：「あなたは〜です。&lt;user_input&gt;&lt;/user_input&gt;で与えられる
+          ユーザの入力を用いて〜」
+- プレースホルダ自体もXMLタグで囲むこと
+  例：「&lt;user_input&gt;{{text}}&lt;/user_input&gt;」
+- プロンプト部分はわかりやすいようにコードブロックで囲むこと。
+- プロンプト以外の余計な説明はしないこと
+- ユーザの入力定義を必ず最後に持ってくること
+&lt;/warning&gt;
+
+[省略]
+
+&lt;input&gt;{{text:ユーザーの入力内容}}&lt;/input&gt;
+&lt;content&gt;{{text:やりたいこと}}&lt;/content&gt;
+&lt;isRagEnabled&gt;{{select:RAGを使いますか:使う,使わない}}&lt;/isRagEnabled&gt;
+</code></pre></div></p> <p><strong>使用例</strong>：</p> <p>入力： <div class=highlight><pre><span></span><code>やりたいこと: 製品説明から魅力的なキャッチコピーを生成する
+ユーザーの入力内容: 製品説明
+RAGを使いますか: 使わない
+</code></pre></div></p> <p>出力： <div class=highlight><pre><span></span><code>あなたは優秀なマーケティングコピーライターです。
+
+&lt;product_description&gt;&lt;/product_description&gt;で与えられる製品説明をもとに、
+魅力的なキャッチコピー候補を5つ作成してください。
+
+以下の点を考慮してキャッチコピーを作成してください：
+- ターゲット顧客の心に響く表現を使用する
+- 製品の最大の特徴や利益を強調する
+- 覚えやすく、印象に残るフレーズにする
+- 感情に訴えかける要素を含める
+- 簡潔で分かりやすい表現にする
+
+出力形式：
+1. [キャッチコピー1]
+2. [キャッチコピー2]
+3. [キャッチコピー3]
+4. [キャッチコピー4]
+5. [キャッチコピー5]
+
+&lt;product_description&gt;
+{{text:製品説明}}
+&lt;/product_description&gt;
+</code></pre></div></p> <p>このプロンプトテンプレートをコピーして、新しいユースケースとして保存できます。</p> <h2 id=77-ready-to-use>7.7 Ready-to-Useユースケース</h2> <p>公式に提供されているユースケースをダウンロードして使用できます。</p> <h3 id=771->7.7.1 ユースケースビルダー - ビルダー</h3> <p><strong>説明</strong>： ユースケース自体を作成するユースケースです。ユースケースの説明と入力を与えるとプロンプトテンプレートを自動生成します。</p> <h3 id=772>7.7.2 議事録作成アシスタント</h3> <p><strong>説明</strong>： 会議の文字起こしやメモを入力すると議事録を自動的に生成します。</p> <h3 id=773>7.7.3 その他のユースケース</h3> <p>公式サンプル集から様々なユースケースをダウンロードできます： - ビジネス一般 - マーケティング - カスタマーサポート - 開発支援 - 教育</p> <h2 id=78>7.8 ベストプラクティス</h2> <h3 id=781>7.8.1 プロンプトテンプレート作成のコツ</h3> <h4 id=_12>明確な役割を定義</h4> <div class=highlight><pre><span></span><code>良い例：
+あなたは10年の経験を持つプロフェッショナルなコピーライターです。
+
+悪い例：
+コピーを書いてください。
+</code></pre></div> <h4 id=xml>XMLタグで構造化</h4> <div class=highlight><pre><span></span><code>良い例：
+&lt;input&gt;
+{{text:入力}}
+&lt;/input&gt;
+
+&lt;instructions&gt;
+- 指示1
+- 指示2
+&lt;/instructions&gt;
+
+悪い例：
+{{text:入力}}を使って指示1と指示2を実行してください。
+</code></pre></div> <h4 id=_13>出力形式を明確に指定</h4> <div class=highlight><pre><span></span><code>良い例：
+以下の形式で出力してください：
+
+## タイトル
+### セクション1
+- ポイント1
+- ポイント2
+
+悪い例：
+適切な形式で出力してください。
+</code></pre></div> <h3 id=782>7.8.2 ユーザビリティの向上</h3> <h4 id=_14>わかりやすいラベル</h4> <div class=highlight><pre><span></span><code>良い例：
+{{text:翻訳したい文章}}
+
+悪い例：
+{{text:input1}}
+</code></pre></div> <h4 id=_15>入力例の提供</h4> <p>各プレースホルダーに具体的な入力例を設定</p> <h4 id=_16>明確な概要</h4> <p>ユースケースの概要で、何ができるかを明確に説明</p> <h3 id=783>7.8.3 保守性の確保</h3> <h4 id=_17>バージョン管理</h4> <p>重要な変更を加える前にエクスポートしてバックアップ</p> <h4 id=_18>テスト</h4> <p>様々な入力パターンでテストし、期待通りの動作を確認</p> <h4 id=_19>ドキュメント</h4> <p>プロンプトテンプレート内にコメントを記載（<code>&lt;!-- コメント --&gt;</code>形式）</p> <h2 id=_20>まとめ</h2> <p>第7章では、ユースケースビルダーについて、基本的な仕組みから高度な活用方法まで詳しく解説しました。ユースケースビルダーを活用することで、プログラミング不要で独自の生成AI機能を簡単に作成・共有でき、組織全体の生産性向上に貢献できます。次章では、Genuのデプロイとカスタマイズについて説明します。</p> </article> </div> <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script> </div> </main> <footer class=md-footer> <nav class="md-footer__inner md-grid" aria-label=Footer> <a href=../chapter6_writing_meeting/ class="md-footer__link md-footer__link--prev" aria-label="Previous: Writing & Meeting"> <div class="md-footer__button md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg> </div> <div class=md-footer__title> <span class=md-footer__direction> Previous </span> <div class=md-ellipsis> Writing & Meeting </div> </div> </a> <a href=../chapter8_deployment/ class="md-footer__link md-footer__link--next" aria-label="Next: Deployment"> <div class=md-footer__title> <span class=md-footer__direction> Next </span> <div class=md-ellipsis> Deployment </div> </div> <div class="md-footer__button md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg> </div> </a> </nav> <div class="md-footer-meta md-typeset"> <div class="md-footer-meta__inner md-grid"> <div class=md-copyright> <div class=md-copyright__highlight> Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. </div> Made with <a href=https://squidfunk.github.io/mkdocs-material/ target=_blank rel=noopener> Material for MkDocs </a> </div> <div class=md-social> <a href=https://github.com/icoxfog417/personal-account-manager target=_blank rel=noopener title=github.com class=md-social__link> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 512 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg> </a> </div> </div> </div> </footer> </div> <div class=md-dialog data-md-component=dialog> <div class="md-dialog__inner md-typeset"></div> </div> <script id=__config type=application/json>{"annotate": null, "base": "../..", "features": ["toc.integrate", "content.code.copy", "content.code.select", "content.code.annotate", "navigation.footer", "navigation.tracking", "navigation.sections", "navigation.expand", "content.action.edit", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script> <script src=../../assets/javascripts/bundle.e71a0d61.min.js></script> </body> </html>
